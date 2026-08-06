@@ -31,6 +31,18 @@ export function imageToJpegBytes(img, quality = 0.9) {
   return canvas.toDataURL('image/jpeg', quality);
 }
 
+export function canvasToPngBytes(canvas) {
+  return new Promise((resolve, reject) => {
+    canvas.toBlob((blob) => {
+      if (!blob) {
+        reject(new Error('PNG 编码失败'));
+        return;
+      }
+      blob.arrayBuffer().then((buffer) => resolve(new Uint8Array(buffer)));
+    }, 'image/png');
+  });
+}
+
 export function fitPageToA4(width, height) {
   const maxW = A4_POINTS.width;
   const maxH = A4_POINTS.height;
@@ -44,10 +56,9 @@ export function fitPageToA4(width, height) {
   };
 }
 
-export async function embedImageAsPdf(file) {
+export async function embedImageIntoDoc(doc, file) {
   const img = await loadImage(file);
   const { width, height } = fitPageToA4(img.naturalWidth, img.naturalHeight);
-  const doc = await PDFDocument.create();
   const imageBytes = new Uint8Array(await file.arrayBuffer());
   const embed = file.type === 'image/png' ? doc.embedPng(imageBytes) : doc.embedJpg(imageBytes);
   const image = await embed;
@@ -58,5 +69,10 @@ export async function embedImageAsPdf(file) {
     width,
     height,
   });
+}
+
+export async function embedImageAsPdf(file) {
+  const doc = await PDFDocument.create();
+  await embedImageIntoDoc(doc, file);
   return doc.save();
 }

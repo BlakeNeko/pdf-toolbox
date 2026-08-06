@@ -39,8 +39,9 @@ export const useMergeStore = defineStore('merge', () => {
     files.value = files.value.filter((f) => f.id !== id);
   }
 
-  function reorder(newItems) {
-    files.value = newItems;
+  function reorder(ids) {
+    const byId = new Map(files.value.map((f) => [f.id, f]));
+    files.value = ids.map((id) => byId.get(id)).filter(Boolean);
   }
 
   async function merge() {

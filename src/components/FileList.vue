@@ -27,7 +27,7 @@ function onDrop() {
     const next = [...props.items];
     const [moved] = next.splice(dragIndex.value, 1);
     next.splice(overIndex.value, 0, moved);
-    emit('reorder', next);
+    emit('reorder', next.map((item) => item.id));
   }
   dragIndex.value = null;
   overIndex.value = null;
