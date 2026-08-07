@@ -2,13 +2,14 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { ImageOff, Square, SquareCheck } from '@lucide/vue';
 import { renderPageToCanvas } from '@/utils/pdf.js';
+import { THUMB_SCALE } from '@/utils/constants.js';
 
 const props = defineProps({
   pdfJsDoc: { type: Object, required: true },
   pageCount: { type: Number, required: true },
   selectable: { type: Boolean, default: false },
   selected: { type: Set, default: () => new Set() },
-  scale: { type: Number, default: 0.5 },
+  scale: { type: Number, default: THUMB_SCALE },
 });
 
 const emit = defineEmits(['toggle', 'toggleAll']);
@@ -88,15 +89,15 @@ function toggleAll() {
       <span class="text-xs text-slate-400">已选 {{ selected.size }} / {{ pageCount }} 页</span>
     </div>
 
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+    <div class="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-3">
       <div
         v-for="page in pageNumbers"
         :key="page"
-        class="group relative rounded-lg border border-slate-200 bg-white p-2"
+        class="group relative overflow-hidden rounded-lg border border-slate-200 bg-white"
       >
         <div
           v-if="selectable"
-          class="absolute left-2 top-2 z-10 cursor-pointer rounded bg-white/90 p-1"
+          class="absolute left-1.5 top-1.5 z-10 cursor-pointer rounded bg-white/90 p-1"
           @click="emit('toggle', page)"
         >
           <component
@@ -106,14 +107,14 @@ function toggleAll() {
           />
         </div>
 
-        <div class="flex h-40 items-center justify-center overflow-hidden">
+        <div class="flex aspect-[3/4] items-center justify-center overflow-hidden bg-slate-50">
           <canvas :data-page="page" class="max-h-full max-w-full object-contain" />
           <div v-if="failed.has(page)" class="flex flex-col items-center gap-1 text-slate-300">
             <ImageOff class="h-8 w-8" />
             <span class="text-xs">渲染失败</span>
           </div>
         </div>
-        <p class="mt-1 text-center text-xs text-slate-500">第 {{ page }} 页</p>
+        <p class="border-t border-slate-100 py-1.5 text-center text-xs text-slate-500">第 {{ page }} 页</p>
       </div>
     </div>
   </div>
