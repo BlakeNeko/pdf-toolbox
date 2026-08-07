@@ -1,9 +1,4 @@
-import {
-  ACCEPTED_IMAGE_TYPES,
-  MAX_FILE_SIZE,
-  MAX_TOTAL_SIZE,
-  PDF_MIME,
-} from './constants.js';
+import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE, MAX_TOTAL_SIZE, PDF_MIME } from './constants.js';
 
 export function isPdf(file) {
   return file.type === PDF_MIME || /\.pdf$/i.test(file.name);

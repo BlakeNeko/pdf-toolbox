@@ -16,7 +16,9 @@ const store = usePdfToImageStore();
           <Image class="h-6 w-6 text-primary-600" />
           PDF 转图片
         </h1>
-        <p class="mt-1 text-sm text-slate-500">上传一个 PDF，将选中页面导出为 PNG 图片（ZIP 打包）</p>
+        <p class="mt-1 text-sm text-slate-500">
+          上传一个 PDF，将选中页面导出为 PNG 图片（ZIP 打包）
+        </p>
       </div>
       <div v-if="store.file" class="flex flex-wrap items-center gap-4">
         <button
@@ -45,7 +47,9 @@ const store = usePdfToImageStore();
     />
 
     <template v-else>
-      <div class="flex items-center justify-between rounded-lg border border-slate-200 bg-white px-4 py-3">
+      <div
+        class="flex items-center justify-between rounded-lg border border-slate-200 bg-white px-4 py-3"
+      >
         <span class="truncate text-sm text-slate-800">{{ store.file.name }}</span>
       </div>
 

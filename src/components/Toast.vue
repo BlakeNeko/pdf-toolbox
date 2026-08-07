@@ -16,14 +16,20 @@ const typeConfig = {
 
 <template>
   <Teleport to="body">
-    <div class="pointer-events-none fixed left-1/2 top-[15vh] z-50 flex -translate-x-1/2 flex-col items-center gap-2">
+    <div
+      class="pointer-events-none fixed left-1/2 top-[15vh] z-50 flex -translate-x-1/2 flex-col items-center gap-2"
+    >
       <TransitionGroup name="toast">
         <div
           v-for="toast in toasts"
           :key="toast.id"
           class="pointer-events-auto flex items-center gap-3 rounded-xl bg-white px-6 py-4 shadow-xl border border-slate-200"
         >
-          <component :is="typeConfig[toast.type].icon" class="h-6 w-6 shrink-0" :class="typeConfig[toast.type].cls" />
+          <component
+            :is="typeConfig[toast.type].icon"
+            class="h-6 w-6 shrink-0"
+            :class="typeConfig[toast.type].cls"
+          />
           <span class="text-base text-slate-700">{{ toast.message }}</span>
         </div>
       </TransitionGroup>

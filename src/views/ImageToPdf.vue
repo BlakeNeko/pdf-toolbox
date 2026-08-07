@@ -16,7 +16,9 @@ const store = useImageToPdfStore();
           <File class="h-6 w-6 text-primary-600" />
           图片转 PDF
         </h1>
-        <p class="mt-1 text-sm text-slate-500">按列表顺序将多张图片转换为一个 PDF，拖拽可调整顺序</p>
+        <p class="mt-1 text-sm text-slate-500">
+          按列表顺序将多张图片转换为一个 PDF，拖拽可调整顺序
+        </p>
       </div>
       <button
         v-if="store.files.length"

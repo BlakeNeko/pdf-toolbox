@@ -27,7 +27,13 @@ export const useImageToPdfStore = defineStore('imageToPdf', () => {
       try {
         const img = await loadImage(file);
         const thumb = drawImageToCanvas(img).toDataURL('image/jpeg', 0.6);
-        files.value.push({ id: nextId++, name: file.name, size: file.size, file: markRaw(file), thumb });
+        files.value.push({
+          id: nextId++,
+          name: file.name,
+          size: file.size,
+          file: markRaw(file),
+          thumb,
+        });
       } catch {
         pushToast('error', `"${file.name}" 加载失败`);
       }

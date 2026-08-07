@@ -19,9 +19,7 @@ const rendered = new Set();
 const failed = new Set();
 let observer = null;
 
-const pageNumbers = computed(() =>
-  Array.from({ length: props.pageCount }, (_, i) => i + 1),
-);
+const pageNumbers = computed(() => Array.from({ length: props.pageCount }, (_, i) => i + 1));
 
 function observeCanvases() {
   if (!rootRef.value || !observer) return;
@@ -114,7 +112,9 @@ function toggleAll() {
             <span class="text-xs">渲染失败</span>
           </div>
         </div>
-        <p class="border-t border-slate-100 py-1.5 text-center text-xs text-slate-500">第 {{ page }} 页</p>
+        <p class="border-t border-slate-100 py-1.5 text-center text-xs text-slate-500">
+          第 {{ page }} 页
+        </p>
       </div>
     </div>
   </div>

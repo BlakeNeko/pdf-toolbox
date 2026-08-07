@@ -56,7 +56,13 @@ const store = useSplitStore();
           :disabled="!store.hasSelection || store.busy"
           @click="store.exportSelected"
         >
-          {{ store.busy ? '导出处理中…' : store.mode === 'merged' ? '导出选中页为 PDF' : '导出选中页为独立 PDF' }}
+          {{
+            store.busy
+              ? '导出处理中…'
+              : store.mode === 'merged'
+                ? '导出选中页为 PDF'
+                : '导出选中页为独立 PDF'
+          }}
         </button>
       </div>
     </header>
@@ -70,7 +76,9 @@ const store = useSplitStore();
     />
 
     <template v-else>
-      <div class="flex items-center justify-between rounded-lg border border-slate-200 bg-white px-4 py-3">
+      <div
+        class="flex items-center justify-between rounded-lg border border-slate-200 bg-white px-4 py-3"
+      >
         <span class="truncate text-sm text-slate-800">{{ store.file.name }}</span>
       </div>
 

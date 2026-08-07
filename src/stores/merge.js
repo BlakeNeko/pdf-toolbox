@@ -2,7 +2,13 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { useToast } from '@/composables/useToast.js';
 import { validateFiles } from '@/utils/file.js';
-import { readPdfBytes, countPages, openPdfDoc, renderPageToCanvas, mergePdfs } from '@/utils/pdf.js';
+import {
+  readPdfBytes,
+  countPages,
+  openPdfDoc,
+  renderPageToCanvas,
+  mergePdfs,
+} from '@/utils/pdf.js';
 import { THUMB_SCALE } from '@/utils/constants.js';
 import { downloadBytes, timestamp } from '@/utils/download.js';
 
@@ -28,7 +34,14 @@ export const useMergeStore = defineStore('merge', () => {
         const bytes = await readPdfBytes(file);
         const pageCount = await countPages(bytes);
         const thumb = await renderFirstPageThumb(bytes);
-        files.value.push({ id: nextId++, name: file.name, size: file.size, bytes, pageCount, thumb });
+        files.value.push({
+          id: nextId++,
+          name: file.name,
+          size: file.size,
+          bytes,
+          pageCount,
+          thumb,
+        });
       } catch {
         pushToast('error', `"${file.name}" 读取失败，可能已损坏或加密`);
       }

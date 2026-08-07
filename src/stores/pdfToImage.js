@@ -91,7 +91,11 @@ export const usePdfToImageStore = defineStore('pdfToImage', () => {
         return;
       }
       const blob = await packZip(entries);
-      downloadBytes(new Uint8Array(await blob.arrayBuffer()), `pdf-images-${timestamp()}.zip`, 'application/zip');
+      downloadBytes(
+        new Uint8Array(await blob.arrayBuffer()),
+        `pdf-images-${timestamp()}.zip`,
+        'application/zip',
+      );
       pushToast('success', `导出完成，已开始下载（${entries.length} 张）`);
     } catch {
       pushToast('error', '导出失败，请重试');

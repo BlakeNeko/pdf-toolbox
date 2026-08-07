@@ -14,13 +14,18 @@ const localItems = ref([...props.items]);
 watch(
   () => props.items,
   (next) => {
-    const same = next.length === localItems.value.length && next.every((item, i) => item.id === localItems.value[i]?.id);
+    const same =
+      next.length === localItems.value.length &&
+      next.every((item, i) => item.id === localItems.value[i]?.id);
     if (!same) localItems.value = [...next];
   },
 );
 
 function onReorder() {
-  emit('reorder', localItems.value.map((item) => item.id));
+  emit(
+    'reorder',
+    localItems.value.map((item) => item.id),
+  );
 }
 </script>
 
@@ -47,12 +52,7 @@ function onReorder() {
       </button>
 
       <div class="flex aspect-[3/4] items-center justify-center overflow-hidden bg-slate-50">
-        <img
-          v-if="item.thumb"
-          :src="item.thumb"
-          alt=""
-          class="h-full w-full object-contain"
-        />
+        <img v-if="item.thumb" :src="item.thumb" alt="" class="h-full w-full object-contain" />
         <FileText v-else class="h-16 w-16 text-slate-300" />
       </div>
 

@@ -2,7 +2,13 @@ import { defineStore } from 'pinia';
 import { ref, shallowRef, computed, markRaw } from 'vue';
 import { useToast } from '@/composables/useToast.js';
 import { validateFiles } from '@/utils/file.js';
-import { readPdfBytes, countPages, openPdfDoc, extractPagesToPdf, extractPagesToPdfs } from '@/utils/pdf.js';
+import {
+  readPdfBytes,
+  countPages,
+  openPdfDoc,
+  extractPagesToPdf,
+  extractPagesToPdfs,
+} from '@/utils/pdf.js';
 import { packZip } from '@/utils/zip.js';
 import { downloadBytes, timestamp } from '@/utils/download.js';
 
@@ -86,7 +92,11 @@ export const useSplitStore = defineStore('split', () => {
       } else {
         const items = await extractPagesToPdfs(bytes.value, pageIndices());
         const blob = await packZip(items);
-        downloadBytes(new Uint8Array(await blob.arrayBuffer()), `split-pages-${timestamp()}.zip`, 'application/zip');
+        downloadBytes(
+          new Uint8Array(await blob.arrayBuffer()),
+          `split-pages-${timestamp()}.zip`,
+          'application/zip',
+        );
       }
       pushToast('success', '导出完成，已开始下载');
     } catch {

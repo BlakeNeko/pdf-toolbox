@@ -43,7 +43,14 @@ function onFiles(files) {
 
     <div v-if="store.files.length" class="space-y-4">
       <FileList
-        :items="store.files.map((f) => ({ id: f.id, name: f.name, extra: `${f.pageCount} 页`, thumb: f.thumb }))"
+        :items="
+          store.files.map((f) => ({
+            id: f.id,
+            name: f.name,
+            extra: `${f.pageCount} 页`,
+            thumb: f.thumb,
+          }))
+        "
         @reorder="store.reorder"
         @remove="store.removeFile"
       />

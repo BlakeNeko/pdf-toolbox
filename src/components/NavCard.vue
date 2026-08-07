@@ -18,10 +18,9 @@ defineProps({
       <component :is="icon" class="h-6 w-6" />
     </span>
     <span>
-      <span
-        class="block font-semibold text-slate-800 group-hover:text-primary-700"
-        >{{ title }}</span
-      >
+      <span class="block font-semibold text-slate-800 group-hover:text-primary-700">{{
+        title
+      }}</span>
       <span class="mt-1 block text-sm text-slate-500">{{ desc }}</span>
     </span>
   </RouterLink>
