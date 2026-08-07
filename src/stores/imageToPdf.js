@@ -13,8 +13,6 @@ export const useImageToPdfStore = defineStore('imageToPdf', () => {
 
   const files = ref([]);
   const busy = ref(false);
-  const progress = ref(0);
-  const statusText = ref('');
 
   const canConvert = computed(() => files.value.length > 0 && !busy.value);
 
@@ -48,8 +46,6 @@ export const useImageToPdfStore = defineStore('imageToPdf', () => {
   async function convert() {
     if (!canConvert.value) return;
     busy.value = true;
-    progress.value = 0;
-    statusText.value = '正在转换…';
     const total = files.value.length;
     let skipped = 0;
     try {
@@ -61,7 +57,6 @@ export const useImageToPdfStore = defineStore('imageToPdf', () => {
           skipped++;
           pushToast('error', `"${files.value[i].name}" 转换失败，已跳过`);
         }
-        progress.value = ((i + 1) / total) * 100;
       }
       if (doc.getPageCount() === 0) {
         pushToast('error', '没有可转换的图片');
@@ -74,10 +69,8 @@ export const useImageToPdfStore = defineStore('imageToPdf', () => {
       pushToast('error', '转换失败，请重试');
     } finally {
       busy.value = false;
-      progress.value = 0;
-      statusText.value = '';
     }
   }
 
-  return { toasts, files, busy, progress, statusText, canConvert, addFiles, removeFile, reorder, convert };
+  return { toasts, files, busy, canConvert, addFiles, removeFile, reorder, convert };
 });

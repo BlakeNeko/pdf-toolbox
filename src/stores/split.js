@@ -16,8 +16,6 @@ export const useSplitStore = defineStore('split', () => {
   const selected = ref(new Set());
   const mode = ref('merged');
   const busy = ref(false);
-  const progress = ref(0);
-  const statusText = ref('');
 
   const hasSelection = computed(() => selected.value.size > 0);
 
@@ -81,20 +79,12 @@ export const useSplitStore = defineStore('split', () => {
   async function exportSelected() {
     if (!hasSelection.value || busy.value) return;
     busy.value = true;
-    progress.value = 0;
     try {
       if (mode.value === 'merged') {
-        statusText.value = '正在提取页面…';
-        const out = await extractPagesToPdf(bytes.value, pageIndices(), (done, total) => {
-          progress.value = (done / total) * 100;
-        });
+        const out = await extractPagesToPdf(bytes.value, pageIndices());
         downloadBytes(out, `split-merged-${timestamp()}.pdf`, 'application/pdf');
       } else {
-        statusText.value = '正在生成独立页面…';
-        const items = await extractPagesToPdfs(bytes.value, pageIndices(), (done, total) => {
-          progress.value = (done / total) * 100;
-        });
-        statusText.value = '正在打包 ZIP…';
+        const items = await extractPagesToPdfs(bytes.value, pageIndices());
         const blob = await packZip(items);
         downloadBytes(new Uint8Array(await blob.arrayBuffer()), `split-pages-${timestamp()}.zip`, 'application/zip');
       }
@@ -103,8 +93,6 @@ export const useSplitStore = defineStore('split', () => {
       pushToast('error', '导出失败，请重试');
     } finally {
       busy.value = false;
-      progress.value = 0;
-      statusText.value = '';
     }
   }
 
@@ -116,8 +104,6 @@ export const useSplitStore = defineStore('split', () => {
     selected,
     mode,
     busy,
-    progress,
-    statusText,
     hasSelection,
     setFile,
     togglePage,

@@ -16,8 +16,6 @@ export const usePdfToImageStore = defineStore('pdfToImage', () => {
   const pageCount = ref(0);
   const selected = ref(new Set());
   const busy = ref(false);
-  const progress = ref(0);
-  const statusText = ref('');
 
   const hasSelection = computed(() => selected.value.size > 0);
 
@@ -73,14 +71,12 @@ export const usePdfToImageStore = defineStore('pdfToImage', () => {
   async function exportImages() {
     if (!hasSelection.value || busy.value) return;
     busy.value = true;
-    progress.value = 0;
     const pages = [...selected.value].sort((a, b) => a - b);
     const total = pages.length;
     const entries = [];
     try {
       for (let i = 0; i < total; i++) {
         const pageNum = pages[i];
-        statusText.value = `正在渲染第 ${pageNum} 页…`;
         try {
           const canvas = document.createElement('canvas');
           await renderPageToCanvas(pdfJsDoc.value, pageNum, EXPORT_DPI, canvas);
@@ -89,13 +85,11 @@ export const usePdfToImageStore = defineStore('pdfToImage', () => {
         } catch {
           pushToast('error', `第 ${pageNum} 页渲染失败，已跳过`);
         }
-        progress.value = ((i + 1) / total) * 100;
       }
       if (!entries.length) {
         pushToast('error', '没有可导出的页面');
         return;
       }
-      statusText.value = '正在打包 ZIP…';
       const blob = await packZip(entries);
       downloadBytes(new Uint8Array(await blob.arrayBuffer()), `pdf-images-${timestamp()}.zip`, 'application/zip');
       pushToast('success', `导出完成，已开始下载（${entries.length} 张）`);
@@ -103,8 +97,6 @@ export const usePdfToImageStore = defineStore('pdfToImage', () => {
       pushToast('error', '导出失败，请重试');
     } finally {
       busy.value = false;
-      progress.value = 0;
-      statusText.value = '';
     }
   }
 
@@ -115,8 +107,6 @@ export const usePdfToImageStore = defineStore('pdfToImage', () => {
     pageCount,
     selected,
     busy,
-    progress,
-    statusText,
     hasSelection,
     setFile,
     togglePage,
