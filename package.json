@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "postbuild": "node -e \"const {copyFileSync}=require('fs');copyFileSync('dist/index.html','dist/404.html')\"",
     "preview": "vite preview",
     "format": "prettier --write \"src/**/*.{js,vue}\" \"index.html\"",
     "format:check": "prettier --check \"src/**/*.{js,vue}\" \"index.html\""
