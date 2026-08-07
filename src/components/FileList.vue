@@ -1,78 +1,67 @@
 <script setup>
-import { ref } from 'vue';
-import { GripVertical, X } from '@lucide/vue';
+import { ref, watch } from 'vue';
+import { VueDraggable } from 'vue-draggable-plus';
+import { FileText, X } from '@lucide/vue';
 
 const props = defineProps({
   items: { type: Array, required: true },
-  draggable: { type: Boolean, default: true },
 });
 
 const emit = defineEmits(['reorder', 'remove']);
 
-const dragIndex = ref(null);
-const overIndex = ref(null);
+const localItems = ref([...props.items]);
 
-function onDragStart(index) {
-  dragIndex.value = index;
-}
+watch(
+  () => props.items,
+  (next) => {
+    const same = next.length === localItems.value.length && next.every((item, i) => item.id === localItems.value[i]?.id);
+    if (!same) localItems.value = [...next];
+  },
+);
 
-function onDragOver(event, index) {
-  event.preventDefault();
-  overIndex.value = index;
-}
-
-function onDrop() {
-  if (dragIndex.value === null || overIndex.value === null) return;
-  if (dragIndex.value !== overIndex.value) {
-    const next = [...props.items];
-    const [moved] = next.splice(dragIndex.value, 1);
-    next.splice(overIndex.value, 0, moved);
-    emit('reorder', next.map((item) => item.id));
-  }
-  dragIndex.value = null;
-  overIndex.value = null;
-}
-
-function onDragEnd() {
-  dragIndex.value = null;
-  overIndex.value = null;
+function onReorder() {
+  emit('reorder', localItems.value.map((item) => item.id));
 }
 </script>
 
 <template>
-  <ul class="space-y-2">
-    <li
-      v-for="(item, index) in items"
+  <VueDraggable
+    v-model="localItems"
+    :animation="150"
+    :filter="'.no-drag'"
+    :prevent-on-filter="true"
+    class="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-3"
+    @update:modelValue="onReorder"
+  >
+    <div
+      v-for="item in localItems"
       :key="item.id"
-      class="flex items-center gap-3 rounded-lg border border-slate-200 bg-white px-3 py-2 transition-opacity"
-      :class="[dragIndex === index ? 'opacity-50' : '', overIndex === index ? 'ring-2 ring-primary-300' : '']"
-      :draggable="draggable"
-      @dragstart="onDragStart(index)"
-      @dragover="onDragOver($event, index)"
-      @drop="onDrop"
-      @dragend="onDragEnd"
+      class="group relative cursor-grab overflow-hidden rounded-lg border border-slate-200 bg-white active:cursor-grabbing"
     >
-      <GripVertical
-        v-if="draggable"
-        class="h-4 w-4 shrink-0 cursor-grab text-slate-400 active:cursor-grabbing"
-      />
-      <img
-        v-if="item.thumb"
-        :src="item.thumb"
-        alt=""
-        class="h-10 w-10 shrink-0 rounded object-cover"
-      />
-      <div class="min-w-0 flex-1">
-        <p class="truncate text-sm text-slate-800">{{ item.name }}</p>
-        <p v-if="item.extra" class="text-xs text-slate-400">{{ item.extra }}</p>
-      </div>
       <button
-        class="rounded p-1 text-slate-400 hover:bg-danger-50 hover:text-danger-500"
+        class="no-drag absolute right-1.5 top-1.5 z-10 rounded p-1 text-slate-400 opacity-0 transition-opacity hover:bg-danger-50 hover:text-danger-500 group-hover:opacity-100"
         :aria-label="`移除 ${item.name}`"
         @click="emit('remove', item.id)"
       >
         <X class="h-4 w-4" />
       </button>
-    </li>
-  </ul>
+
+      <div class="flex aspect-[3/4] items-center justify-center overflow-hidden bg-slate-50">
+        <img
+          v-if="item.thumb"
+          :src="item.thumb"
+          alt=""
+          class="h-full w-full object-contain"
+        />
+        <FileText v-else class="h-16 w-16 text-slate-300" />
+      </div>
+
+      <div class="flex items-center gap-1 border-t border-slate-100 px-2 py-2">
+        <div class="min-w-0 flex-1">
+          <p class="truncate text-xs text-slate-800">{{ item.name }}</p>
+          <p v-if="item.extra" class="text-[11px] text-slate-400">{{ item.extra }}</p>
+        </div>
+      </div>
+    </div>
+  </VueDraggable>
 </template>
