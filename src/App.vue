@@ -23,9 +23,5 @@ const route = useRoute();
     <main class="flex-1 w-full max-w-5xl mx-auto px-4 py-8">
       <RouterView />
     </main>
-
-    <footer class="text-center text-xs text-slate-400 py-4">
-      文件不会离开你的设备 · 离线可用
-    </footer>
   </div>
 </template>
