@@ -46,10 +46,12 @@ function onChange(event) {
     @dragleave.prevent="dragging = false"
     @drop.prevent="onDrop"
   >
-    <div class="flex flex-col items-center justify-center gap-2 py-12 px-4 text-center">
-      <CloudUpload class="h-10 w-10 text-slate-400" />
-      <p class="text-sm text-slate-600">{{ title }}</p>
-      <p v-if="hint" class="text-xs text-slate-400">{{ hint }}</p>
+    <div class="flex items-center justify-center gap-3 px-4 py-5 text-center">
+      <CloudUpload class="h-7 w-7 shrink-0 text-slate-400" />
+      <div class="text-left">
+        <p class="text-sm text-slate-600">{{ title }}</p>
+        <p v-if="hint" class="text-xs text-slate-400">{{ hint }}</p>
+      </div>
     </div>
     <input
       ref="inputRef"
